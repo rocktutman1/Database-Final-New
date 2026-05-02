@@ -591,6 +591,14 @@ INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM At
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Seigi Sata'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Masayuki Maegawa'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Takashi Nakayama'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Felipe Harte'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Luis Patiño'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Davi Muller'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Mateo Pereyra'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Luis Alberto'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Alejandro Ledesma'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Santiago Rios'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Mateo Justitz'), (SELECT id FROM Races WHERE name='89th Tokyo Atheltics Open Championships'));
 
 -- race dos --
 
@@ -707,6 +715,11 @@ INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM At
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Bárbara Keller'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Agustina Kotvinsky'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Renata Beninca'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Joana Ferreira'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Sara Duarte'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Carla Martinho'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Lisa Julien'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Joana Marques'), (SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa'));
 
 -- race tres --
 
@@ -735,8 +748,14 @@ INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM At
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Ana Silva'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Cátia Rodrigues'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
 INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Elia Rodrigues'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
-
-
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Déborah Rodríguez'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Rosa Escobar'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Nykolli Alves'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Julieta Firpo'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Flavia Lanza'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Victoria De'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Morena Maldonado'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
+INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES ((SELECT id FROM Athletes WHERE name='Camila Valle'), (SELECT id FROM Races WHERE name='Europe Half Marathon'));
 
 -- Event Entries --
 
@@ -896,6 +915,7 @@ INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES ((SELECT id FROM 
 INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES ((SELECT id FROM Athletes WHERE name='Erika Mc'), (SELECT id FROM Events WHERE heat='Women''s 400m Hurdles Final' AND race_id=(SELECT id FROM Races WHERE name='Grand Prix Darwin Piñeyrúa')));
 
 -- race tress --
+
 
 INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES ((SELECT id FROM Athletes WHERE name='Alexandre Venâncio'), (SELECT id FROM Events WHERE heat='Men''s Half Marathon Final' AND race_id=(SELECT id FROM Races WHERE name='Europe Half Marathon')));
 INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES ((SELECT id FROM Athletes WHERE name='Nuno Fernandes'), (SELECT id FROM Events WHERE heat='Men''s Half Marathon Final' AND race_id=(SELECT id FROM Races WHERE name='Europe Half Marathon')));

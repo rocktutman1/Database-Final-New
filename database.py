@@ -212,12 +212,15 @@ def register_event(connection, athlete_id, event_id):
     """Register a athelete for a event"""
     try: 
         cursor=connection.cursor()
+        cursor.execute("START TRANSACTION")
         cursor.execute("INSERT INTO Event_Entries (athlete_id, event_id) VALUES (%s, %s)",(athlete_id,event_id))
         cursor.execute("INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES (%s, (SELECT race_id FROM Events WHERE id = %s))", (athlete_id, event_id))\
         ## Did this while writing comments and realized I avoided orphaned entries earlier but not here ^
+        cursor.execute("COMMIT")
         connection.commit()
         print(f"Registered athlete #{athlete_id} for event #{event_id}")
     except mysql.connector.Error as e:
+        cursor.execute("ROLLBACK")
         print(f"Error: {e}")
 
 ## C(R)UD
