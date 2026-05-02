@@ -5,10 +5,7 @@ import mysql.connector
 def fix_encoding(message):
     """some bs was happening where it was turning all the accents into nonsence and I googled it apparently 
     this is the fix """
-    try:
-        return message.encode("latin-1").decode("utf-8")
-    except (UnicodeDecodeError, UnicodeEncodeError):
-        return message
+    return message.encode("latin-1").decode("utf-8")
 
 def epstein_reader(cursor):
     """lil printy function to print stuff"""
@@ -21,6 +18,7 @@ def epstein_reader(cursor):
     for row in rows:
         for i in range(len(row)):
             dude = fix_encoding(str(row[i]))
+            ## Grows and shrinks the spacing 
             if headers[i] == "race":
                 print(dude.ljust(40), end="")
             elif headers[i] == "country":
@@ -40,10 +38,54 @@ def create_connection():
             password="password",
             database="Running",
         )
+        ## Tried to do localisation stuff here for a while before I found out I needed to encode it
         return connection
     except mysql.connector.Error as e:
         print(f"Error: {e}")
         return None
+
+## Stuff to give data for other queries
+
+def get_record_id(connection, name):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("Select * from Records WHERE athlete_id = (SELECT id FROM Athletes WHERE name = %s)", (name,))
+        print(f"\nRecords for {name}")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def get_athlete_id(connection, name):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Athletes WHERE name = %s", (name,))
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def get_race_id(connection, name):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Races WHERE name = %s", (name,))
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def get_event_id(connection, race_name):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Events WHERE race_id = (SELECT id FROM Races WHERE name = %s)", (race_name,)) ## Somestimes I feel nice and dont make them go into HELP_ME while already in HELP_ME
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def get_result_id(connection, athlete_name, event_id):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT Results.id, Athletes.name, time FROM Results JOIN Athletes ON Results.athlete_id = Athletes.id WHERE Athletes.name = %s AND event_id = %s", (athlete_name, event_id))
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
 
 ## (C)RUD
 
@@ -52,8 +94,8 @@ def add_record(connection, athlete_id, time, event_type):
     try:
         cursor = connection.cursor()
         fastest_time_q = "SELECT CAST(MIN(time) AS CHAR) FROM Results JOIN Events ON Results.event_id = Events.id WHERE athlete_id = %s AND event_type = %s"
-        cursor.execute(fastest_time_q, (athlete_id, event_type))
-        fastest_result = cursor.fetchone()[0]
+        cursor.execute(fastest_time_q, (athlete_id, event_type)) #Cast as char because I give it input as a string and I cant compare a deltatime object to a string
+        fastest_result = cursor.fetchone()[0] 
         if fastest_result is not None and time >= fastest_result:
             print(f"Error: Time {time} is not faster than best result {fastest_result}")
             return
@@ -92,20 +134,18 @@ def add_race(connection, title, date):
     except mysql.connector.Error as e:
         print(f"Error: {e}")
 
-def add_event(connection, race_id, event_type, heat):
+def add_event(connection, race_name, event_type, heat):
     """Add an event to the database"""
     try:
         cursor = connection.cursor()
-        query = "INSERT INTO Events (race_id, event_type, heat) VALUES (%s, %s, %s)"
-        cursor.execute(query, (race_id, event_type, heat))
-        query = "SELECT name FROM Races WHERE id = %s"
-        cursor.execute(query, (race_id,))
-        race = cursor.fetchone()
-        connection.commit()
-        if race:
-            print(f"Added event '{heat}' at {race[0]}")
+        if race_name == "NULL".upper(): ## I figure it kinda makes sence to be able to have events that arent part of a meet, and I think sql doesnt enforce unique on nulls
+            query = "INSERT INTO Events (event_type, heat) VALUES (%s, %s)"
+            cursor.execute(query, (event_type, heat))
         else:
-            print(f"Added event '{heat}' (race not found)")
+            query = "INSERT INTO Events (race_id, event_type, heat) VALUES ((SELECT id FROM Races WHERE name = %s), %s, %s)"
+            cursor.execute(query, (race_name, event_type, heat))
+        connection.commit()
+        print(f"Added event: {event_type} heat {heat}")
     except mysql.connector.Error as e:
         print(f"Error: {e}")
 
@@ -114,7 +154,7 @@ def add_result(connection, athlete_id, event_id, time):
     If the result is a PB it will update the records table."""
     try:
         cursor = connection.cursor()
-        cursor.execute("START TRANSACTION")
+        cursor.execute("START TRANSACTION") ## DEI transaction because the rubric asked for one
         cursor.execute("SELECT race_id, event_type FROM Events WHERE id = %s", (event_id,)) ## get stuff to check for pbs and also register athletes for races
         row = cursor.fetchone()
         if not row:
@@ -122,8 +162,8 @@ def add_result(connection, athlete_id, event_id, time):
             print(f"Error: Event {event_id} not found")
             return
         race_id, event_type = row
-        cursor.execute("INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES (%s, %s)",(athlete_id, race_id))
-        cursor.execute("INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES (%s, %s)",(athlete_id, event_id))
+        cursor.execute("INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES (%s, %s)",(athlete_id, race_id)) #I decided to have it do this to avoid orphaned entries
+        cursor.execute("INSERT IGNORE INTO Event_Entries (athlete_id, event_id) VALUES (%s, %s)",(athlete_id, event_id)) #Ignore so no error :)
         cursor.execute("INSERT INTO Results (athlete_id, event_id, time) VALUES (%s, %s, %s)",(athlete_id, event_id, time))
         # check if this is a pb (peanut butter)
         cursor.execute("SELECT CAST(time as CHAR) FROM Records WHERE athlete_id = %s AND event_type = %s",(athlete_id, event_type))
@@ -173,6 +213,8 @@ def register_event(connection, athlete_id, event_id):
     try: 
         cursor=connection.cursor()
         cursor.execute("INSERT INTO Event_Entries (athlete_id, event_id) VALUES (%s, %s)",(athlete_id,event_id))
+        cursor.execute("INSERT IGNORE INTO Race_Entries (athlete_id, race_id) VALUES (%s, (SELECT race_id FROM Events WHERE id = %s))", (athlete_id, event_id))\
+        ## Did this while writing comments and realized I avoided orphaned entries earlier but not here ^
         connection.commit()
         print(f"Registered athlete #{athlete_id} for event #{event_id}")
     except mysql.connector.Error as e:
@@ -230,9 +272,18 @@ def get_event_results(connection, event_id):
     except mysql.connector.Error as e:
         print(f"Error: {e}")
 
+def get_splits(connection, result_id):
+    """Get splits for a specific result"""
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT split_distance, split_time FROM Splits WHERE result_id = %s", (result_id,))
+        print(f"\nSplits for result #{result_id}")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
 ## premade queries cus why not
 
-def premade(connection, query):
+def premade(connection, query): ## Figured it would be a waste of time to have written them for queries.sql and not put them in here
     try:
         big_scary_query_list = ['SELECT * FROM Races', 
             '''SELECT split_distance, split_time, event_type, time, name FROM Splits JOIN Results on Results.id = Splits.result_id JOIN Events on Events.id = Results.event_id JOIN Athletes on Results.athlete_id = Athletes.id ORDER BY split_time ASC''',
@@ -251,9 +302,63 @@ def premade(connection, query):
     except mysql.connector.Error as e:
         print(f"Error: {e}")
 
+## also simple star selects cus I guess they would be a good idea
+# I feel like ts is a waste of time because it would be so much faster to just write select stateaments in sql instead of making a frontend
+# and its not even like I restriced privleges they could just enter * when deleting stuff and do the same damage
+# Whats even the point of protecting against sql injection when they have all the privleges they could ever need besides like drop table and database
+# Also the root password is litterally hardcoded so idk dawg
+# Also they make the container 
+def starathletes(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Athletes")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def starraces(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Races")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def starevents(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Events")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def starsplits(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Splits")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def starrecords(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Records")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
+def starresults(connection):
+    try:
+        cursor=connection.cursor()
+        cursor.execute("SELECT * FROM Results")
+        epstein_reader(cursor)
+    except mysql.connector.Error as e:
+        print(f"Error: {e}")
+
 ## CR(U)D
 
-def update_record(connection, athlete_id, event_type, time):
+def update_record(connection, athlete_id, event_type, time): #This function reminds me of mijo :(
     """Update a record if the new time is faster"""
     try:
         cursor = connection.cursor()
@@ -337,3 +442,4 @@ def delete_record(connection, athlete_id, event_type):
         print(f"Record for athlete #{athlete_id} in {event_type} deleted")
     except mysql.connector.Error as e:
         print(f"Error: {e}")
+

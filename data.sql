@@ -1053,7 +1053,7 @@ INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athle
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Masayuki Maegawa'), '400m', '00:00:50.990');
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Takashi Nakayama'), '100m', '00:00:11.510');
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Alexandre Venâncio'), 'Half Marathon', '01:04:28.000');
-INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Alexandre Venâncio'), '300m Steeplechase', '00:08:56.350');
+INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Alexandre Venâncio'), '3000m Steeplechase', '00:08:56.350');
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Alexandre Venâncio'), '10000m', '00:29:44.000');
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Nuno Fernandes'), 'Half Marathon', '01:04:47.000');
 INSERT INTO Records (athlete_id, event_type, time) VALUES ((SELECT id FROM Athletes WHERE name='Nuno Fernandes'), '10000m', '00:30:16.000');
