@@ -46,7 +46,7 @@ print("Welcome too the running database manager!!!")
 print("View the README for helpfull instruction")
 
 while True: #This is all pretty self explanitory its just nested if statements so I'm not gonna comment it
-    print("1. Create \n2. Read \n 3. Update \n4. Delete \n5. Exit")
+    print("1. Create \n2. Read \n3. Update \n4. Delete \n5. Exit")
     choice = input("What would you like to do? ")
     if choice.startswith("1"):
         while True:
@@ -213,7 +213,7 @@ while True: #This is all pretty self explanitory its just nested if statements s
                     continue
                 event_type = input("What is the event type for the record? ")
                 new_time = Good_Time_Machine()
-                database.update_personal_record(connection, athlete_id, event_type, new_time)
+                database.update_record(connection, athlete_id, event_type, new_time)
             if choice2.startswith("4"):
                 break
     if choice.startswith("4"):
@@ -257,12 +257,13 @@ while True: #This is all pretty self explanitory its just nested if statements s
                 else:
                     print("Deletion cancelled.")
             if choice2.startswith("5"):
-                record_id = input("What is the record's ID? (H for help) ")
-                if record_id.startswith("H"):
+                athlete_id = input("What is the athlete's ID? (H for help) ")
+                if athlete_id.startswith("H"):
                     I_NEED_HELP()
                     continue
-                if input(f"Are you sure you want to delete record #{record_id}? This cannot be undone. (Y/N) ").upper().startswith("Y"):
-                    database.delete_record(connection, record_id)
+                event_type = input("What is the event type for the record? ")
+                if input(f"Are you sure you want to delete record? This cannot be undone. (Y/N) ").upper().startswith("Y"):
+                    database.delete_record(connection, athlete_id, event_type)
                 else:
                     print("Deletion cancelled.")
             if choice2.startswith("6"):
