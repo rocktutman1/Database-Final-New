@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS Running;
 USE Running;
-
 -- Entity Tables --
 
 -- I Guess if you had two guys from the same country with the name they would be the same guy aside from the pk
@@ -23,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Records (
 CREATE TABLE IF NOT EXISTS Races (
     id int PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR (200) NOT NULL,
-    date DATE DEFAULT CURRENT_DATE
+    date DATE DEFAULT (CURRENT_DATE)
 ); 
 CREATE TABLE IF NOT EXISTS Events (
     id int PRIMARY KEY AUTO_INCREMENT,
