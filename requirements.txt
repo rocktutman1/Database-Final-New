@@ -1,2 +1,2 @@
-mysql.connector
-datetime.datetime
+mysql-connector-python
+datetime
