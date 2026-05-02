@@ -64,7 +64,6 @@ python main.py
 ```
 
 ## Table Descriptions
-
 ![ERD](https://github.com/rocktutman1/Database-Final-New/blob/main/ERD.png)
 
 ### Athletes
@@ -130,6 +129,10 @@ Since event type does not use a fk it can be easily descronized, stick to only u
 * 300m Steeplechase
 * Half Marathon
 * Marathon
+
+### Example Usage
+
+![Example Usage](https://github.com/rocktutman1/Database-Final-New/blob/main/Screenshot%202026-05-01%20234541.png)
 
 ### Finding IDs
 
