@@ -33,7 +33,7 @@ ORDER BY num_athletes DESC;
 -- 5. Gets the average time for each event type --
 SELECT SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(time)), 3)) AS avg_time, event_type FROM Events
 JOIN Results ON Results.event_id = Events.id
-WHERE results.time IS NOT NULL
+WHERE Results.time IS NOT NULL
 GROUP BY event_type
 ORDER BY avg_time DESC;
 
